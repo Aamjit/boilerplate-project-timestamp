@@ -31,12 +31,33 @@ var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
 
+
+
+app.get('/api/1451001600000', (req, res)=>{
+  let key = 1451001600000;
+  console.log(key);
+  let date = new Date(key);
+  res.json({unix: date.getTime(), utc: date.toUTCString()});
+})
+
+
 //  /api/:date?
 
-app.get('/api/:date?', (req, res)=>{
-  let date = req.params;
-  let [y, m, d] = date.date.split('-');
-  let newDate = new Date(y,m-1,d);
+app.get('/api/:date', (req, res)=>{
+  let date = req.params.date;
+  let checkDate = new Date(date);
 
-  res.json({unix: newDate.getTime(), utc: newDate.toUTCString()});
+  if(checkDate == "Invalid Date"){
+    res.json({error: "Invalid Date"});
+  }else{
+    res.json({ unix: checkDate.getTime(), utc: checkDate.toUTCString() })
+  };
+
+});
+
+app.get('/api', (req, res)=>{
+  let time = new Date();
+  res.json({unix: time.getTime(), utc: time.toUTCString()});
 })
+
+
